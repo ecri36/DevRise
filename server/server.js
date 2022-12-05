@@ -64,7 +64,7 @@ async function startApolloServer() {
   // Modified server startup
   await new Promise(resolve => httpServer.listen({ port: 4000 }, resolve));
   // Display a log to notify that the GQL server is up and running
-  console.log(`GraphQL server ready at http://localhost:4000/`);
+  console.log(`💯 GraphQL server ready at http://localhost:4000/ 💯`);
 }
 
 startApolloServer();
