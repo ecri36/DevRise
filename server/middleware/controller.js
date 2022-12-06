@@ -3,10 +3,10 @@ const bcrypt = require('bcrypt');
 const db = require('../models/dbConnection');
 
 module.exports = {
-  getUser: async userId => {
+  getUser: async email => {
     try {
-      const query = `SELECT * FROM users WHERE _id = $1`;
-      const values = [userId];
+      const query = `SELECT * FROM users WHERE email = $1`;
+      const values = [email];
       const { rows } = await db.query(query, values);
       return {
         id: rows[0]._id,
@@ -24,6 +24,7 @@ module.exports = {
     try {
       const { name, email, password, registerType } = userData;
       let values = [name, email, null];
+      
       if (registerType !== 'oauth') {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
@@ -112,7 +113,6 @@ module.exports = {
       } else {
         throw new Error('Error in deleting job');
       }
-      
     } catch (error) {
       console.log('an error occured in deleteJob');
       console.log(`Error message: ${error.message}`);
