@@ -40,10 +40,10 @@ module.exports = {
       return controller.deleteJob(args.jobId);
     },
     signin: async (_, args) => {
-      const { signinType, email, password } = args;
+      const { signinType, email, code, password } = args;
 
       if (signinType === 'oauth') {
-        await handleOAuth();
+        await handleOAuth(code);
       }
 
       // Return dummyData for now

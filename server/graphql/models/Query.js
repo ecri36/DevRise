@@ -29,7 +29,6 @@ const Query = `
         
     }
         
-        
     type Jobs {
         jobs: [JobEntry]
     }
