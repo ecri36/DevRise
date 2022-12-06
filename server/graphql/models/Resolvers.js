@@ -31,9 +31,10 @@ module.exports = {
       };
     },
   },
+
   Mutation: {
     makeJob: async (_, args) => {
-      //TODO: Create function that makes job
+      // TODO: Create function that makes job
       const { jobData } = args;
       // Return dummy data for now
       return {
