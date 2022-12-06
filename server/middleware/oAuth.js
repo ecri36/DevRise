@@ -3,8 +3,6 @@ import jwt from 'jsonwebtoken';
 
 import { userController } from './userController';
 
-const clientID = '6d90f6ec2d021298591c';
-const clientSecret = 'f88c5b69a6d1a72a1b76c132764e6ba6395e49d9';
 
 export async function getOAuthToken(code) {
   try {
@@ -12,8 +10,8 @@ export async function getOAuthToken(code) {
       'https://github.com/login/oauth/access_token';
 
     const params = {
-      client_id: clientID,
-      client_secret: clientSecret,
+      client_id: process.env.CLIENT_ID,
+      client_secret: process.env.CLIENT_SECRET,
       code: code,
     };
 
@@ -51,7 +49,7 @@ export function generateJWT(userObject) {
         name: userObject.name,
         avatarUrl: userObject.avatarUrl,
         },
-        JWT_SECRET,
+        process.env.JWT_SECRET,
         {
         expiresIn: 3_600_000,
         }

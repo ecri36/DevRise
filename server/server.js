@@ -7,10 +7,12 @@ const express = require('express');
 const http = require('http');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-
+const dotenv = require('dotenv');
+dotenv.config
 // Importing the combined type and resolver definitions to import to Apollo Server
 const typeDefs = require('./graphql/models/Query');
 const resolvers = require('./graphql/models/Resolvers');
+const { domainToASCII } = require('url');
 // Type definitions
 
 /*
