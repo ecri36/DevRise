@@ -13,9 +13,11 @@ function CardItem({ data, index }) {
         >
           <h5 className="text-md my-3 text-lg leading-6">{data.title}</h5>
         </div>
-
       )}
     </Draggable>
+
+
+
   );
 }
 
