@@ -1,3 +1,7 @@
+const { createJob } = require('../../middleware/controller');
+const controller = require('../../middleware/controller');
+const { handleOAuth } = require('../../middleware/oAuth');
+
 module.exports = {
   Query: {
     jobs: async (_, args) => {
@@ -22,49 +26,26 @@ module.exports = {
     },
     user: async (_, args) => {
       const { userId } = args;
-      // Return dummy data for now
-      return {
-        id: 1,
-        name: 'James Cyrus Bond',
-        email: 'bond@mi6.uk',
-        dailyJobsApplied: 2,
-      };
+      return await controller.getUser(userId);
     },
   },
-
   Mutation: {
-    makeJob: async (_, args) => {
-      // TODO: Create function that makes job
-      const { jobData } = args;
-      // Return dummy data for now
-      return {
-        success: true,
-        updateType: 'create',
-        jobId: 1,
-      };
+    createJob: async (_, args) => {
+      return controller.createJob(args);
     },
     updateJob: async (_, args) => {
-      //TODO: Create function that makes job
-      const { jobId, jobData } = args;
-      // Return dummy data for now
-      return {
-        success: true,
-        updateType: 'update',
-        jobId: 1,
-      };
+      return controller.updateJob(args);
     },
     deleteJob: async (_, args) => {
-      //TODO: Create function that makes job
-      const { jobId } = args;
-      // Return dummy data for now
-      return {
-        success: true,
-        updateType: 'delete',
-        jobId: 1,
-      };
+      return controller.deleteJob(args.jobId);
     },
     signin: async (_, args) => {
       const { signinType, email, password } = args;
+
+      if (signinType === 'oauth') {
+        await handleOAuth();
+      }
+
       // Return dummyData for now
       return {
         success: true,

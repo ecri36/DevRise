@@ -5,8 +5,8 @@ const Query = `
     }
 
     type Mutation {
-        makeJob(
-            ownerId: Int,
+        createJob(
+            userId: Int,
             jobTitle: String,
             status: String,
             company: String,
@@ -17,12 +17,13 @@ const Query = `
                 : JobResponse,
         
         updateJob(jobId: Int, jobField: String, value: String): JobResponse
+        
         deleteJob(jobId: Int): JobResponse,        
         signin(signinType: String, email: String, password: String): AuthorizationResponse,
         register(registerType: String,
             name: String, 
             email: String,
-            dailyJobsApplied: Int )
+            password: String )
                 : AuthorizationResponse
 
         
