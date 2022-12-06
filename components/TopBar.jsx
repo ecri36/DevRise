@@ -15,7 +15,7 @@ function TopBar(props) {
       <div className="flex space-x-6">
 
         <div className="flex items-center text-white">
-          <h3 className="font-bold mr-3">jamesbond@gmail.com</h3>
+          <h3 className="font-bold mr-3">[insert GitHub username]</h3>
         </div>
 
         <div className="flex items-center text-white">
