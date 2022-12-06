@@ -6,6 +6,34 @@ import { userController } from './userController';
 const clientID = '6d90f6ec2d021298591c';
 const clientSecret = 'f88c5b69a6d1a72a1b76c132764e6ba6395e49d9';
 
+export async function getOAuthToken(code) {
+  try {
+    const gitHubOAuthAccessTokenUrl =
+      'https://github.com/login/oauth/access_token';
+
+    const params = {
+      client_id: clientID,
+      client_secret: clientSecret,
+      code: code,
+    };
+
+    const headers = {
+      Accept: 'application/json',
+    };
+
+    const accessTokenResponse = await axios.post(
+      gitHubOAuthAccessTokenUrl,
+      {},
+      { params, headers }
+    );
+
+    return { gitHubToken: accessTokenResponse.data.access_token };
+  } catch (error) {
+    console.log(error.message);
+    return { gitHubToken: 'Invalid code' };
+  }
+}
+
 export function buildNewGitHubUserData(gitHubUserData){
     return {
         oauthUser: true,

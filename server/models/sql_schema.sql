@@ -31,3 +31,12 @@ INSERT INTO jobs (owner_id, job_title, status, company, location, hyperlink, pos
 VALUES(1, 'SWE', 'applied', 'google', '123 street', 'google.com', 'backend', '01012022') RETURNING *
 
 SELECT * FROM jobs
+
+CREATE TABLE training (
+    _id SERIAL PRIMARY KEY,
+    question varchar(250) NOT NULL,
+    answer varchar(250)
+);
+
+INSERT INTO training (question, answer)
+VALUES('Why do you want to work here?', '$$$') RETURNING *
