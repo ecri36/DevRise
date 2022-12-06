@@ -9,8 +9,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 // Importing the combined type and resolver definitions to import to Apollo Server
-const typeDefs = require('./models/Query');
-const resolvers = require('./models/Resolvers');
+const typeDefs = require('./graphql/models/Query');
+const resolvers = require('./graphql/models/Resolvers');
 // Type definitions
 
 /*
