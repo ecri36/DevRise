@@ -8,7 +8,7 @@ const Query = `
         makeJob(jobData: JobEntry): JobResponse,
         updateJob(jobId: Int, jobData: JobEntry): JobResponse,
         deleteJob(jobId: Int): JobResponse, 
-        signin(signinType: String, email: String, password?: String): AuthorizationResponse
+        signin(signinType: String, email: String, password: String): AuthorizationResponse
         register(registerType: String, userData: UserData): AuthorizationResponse
     }
 
