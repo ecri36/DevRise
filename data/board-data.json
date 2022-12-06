@@ -1,0 +1,48 @@
+[
+    {
+        "name":"Prospective",
+        "items": [
+            {
+                "id":1,
+                "title": "Google"
+            
+            },
+            {
+                "id":2,
+                "title": "Stripe"
+            }
+        ]
+    },
+    {
+        "name":"App Submitted",
+        "items": [
+            {
+                "id":3,
+                "title": "Capital One"
+            }
+        ]
+    },
+    {
+        "name":"Interview Scheduled",
+        "items": [
+            {
+                "id":4,
+                "title": "Amazon"
+
+            },
+            {
+                "id":5,
+                "title": "AngelList"
+            }
+        ]
+    },
+    {
+        "name":"Rejected",
+        "items": [
+            {
+                "id":6,
+                "title": "Meta"
+            }
+        ]
+    }
+]
