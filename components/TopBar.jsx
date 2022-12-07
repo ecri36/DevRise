@@ -1,17 +1,18 @@
 import React from 'react';
 import { SearchIcon, AtSymbolIcon, BellIcon } from '@heroicons/react/outline';
 import Image from 'next/image';
+import Link from 'next/link'
 
 function TopBar(props) {
   return (
-    <div className="h-16 pl-40 fixed bg-gradient-to-r from-purple-400
-        to-blue-500 w-full flex items-center justify-between pr-5">
-      <div className="flex px-5 items-center">
+    <div style={{zIndex: 1}} className="z-1 h-16 pl-40 fixed bg-gradient-to-r from-purple-700
+        to-red-300 w-full flex items-center pr-5 justify-end">
+      {/* <div className="flex px-5 items-center">
         <SearchIcon className="w-5 h-5 text-white" />
         <input type="text" placeholder="Search for company"
           className=" bg-transparent border-0 text-white placeholder-gray-200
                 outline-none focus:ring-0 text-lg"/>
-      </div>
+      </div> */}
       <div className="flex space-x-6">
 
         <div className="flex items-center text-white">
@@ -19,9 +20,12 @@ function TopBar(props) {
         </div>
 
         <div className="flex items-center text-white">
-          <button class="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 border-b-4 border-red-600 hover:border-red-500 rounded">
-            Log Out
-          </button>
+          <Link href="/login">
+            <button class="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 border-b-4 border-red-600 hover:border-red-500 rounded">
+              Log Out
+            </button>
+          </Link>
+          
         </div>
       </div>
     </div>

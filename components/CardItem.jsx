@@ -1,7 +1,7 @@
 import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 
-function CardItem({ data, index }) {
+function CardItem({ data, index, hidden }) {
   return (
     <Draggable index={index} draggableId={data._id.toString()}>
       {provided => (

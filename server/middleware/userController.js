@@ -17,7 +17,7 @@ export const userController = {
         values = [username, null, null, hashedPassword];
       }
 
-      const query = `INSERT INTO users (username, name, avatar_url, password)\
+      const query = `INSERT INTO users (name, password, email, daily_job_count)\
       VALUES ($1, $2, $3, $4) RETURNING *;`;
 
       const { rows } = await quilDbConnection.query(query, values);
