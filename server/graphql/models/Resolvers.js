@@ -1,4 +1,4 @@
-const { createJob } = require('../../middleware/controller');
+const { createJob, getJobs } = require('../../middleware/controller');
 const controller = require('../../middleware/controller');
 const { handleOAuth } = require('../../middleware/oAuth');
 
@@ -6,23 +6,9 @@ module.exports = {
   Query: {
     jobs: async (_, args) => {
       const { userId } = args;
-      //TODO: Create function that gets users jobs
-      // Return dummy data for now
-      return {
-        jobs: [
-          {
-            id: 1,
-            ownerId: 1,
-            jobTitle: ' String',
-            status: 'String',
-            company: 'String',
-            location: 'String',
-            hyperlink: 'String',
-            positionType: 'String',
-            applicationData: 'String',
-          },
-        ],
-      };
+      console.log('ARe we here?');
+
+      return getJobs(userId);
     },
     user: async (_, args) => {
       const { userId } = args;
@@ -42,18 +28,23 @@ module.exports = {
     signin: async (_, args) => {
       const { signinType, email, code, password } = args;
 
+      let token;
       if (signinType === 'oauth') {
-        await handleOAuth(code);
+        const { token } = await handleOAuth(code);
+        token = token;
       }
 
       // Return dummyData for now
       return {
         success: true,
-        token: 'dummy token',
+        token,
       };
     },
     register: async (_, args) => {
       const { registerType, UserData } = args;
+      if (signinType === 'oauth') {
+        await handleOAuth(code);
+      }
       // Return dummy data for now
       return {
         success: true,

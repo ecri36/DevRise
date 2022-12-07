@@ -5,6 +5,7 @@ const nextConfig = {
   images: {
     domains: ['randomuser.me'],
   },
+  reactStrictMode: false,
 };
 
 module.exports = nextConfig;
