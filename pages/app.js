@@ -47,10 +47,9 @@ export default function Home() {
   const [selectedBoard, setSelectedBoard] = useState(0);
   const [search, setSearch] = useState('');
 
-  const [appsToday, setAppsToday] = useState(0);
-
   // The init value is hard coded for testing
   const [currentUser, setUser] = useState();
+  const [appsToday, setAppsToday] = useState(0);
   const [columnMap, setColumns] = useState({
     0: 'Prospective',
     1: 'App Submitted',
@@ -114,23 +113,59 @@ export default function Home() {
     );
   };
 
+  const deleteJob = async (_, jobData) => {
+    console.log();
+    // do we do anything with state here before proceeding?
+    const { _id, status } = jobData;
+    const queryString = `mutation {
+    deleteJob(
+      jobId: ${_id}
+    ) {
+      success
+    }
+  }`;
+
+    // Deconstruct the job from the response
+    const data = await postToBackEnd(queryString);
+
+    const { items } = boardData.find(column => column.name === status);
+    // set a new items array so we are not affecting state directly
+    const newItems = items.filter(job => job._id !== _id);
+    // set new state
+    setBoardData(oldState =>
+      oldState.map(column =>
+        column.name === status ? { ...column, items: newItems } : column
+      )
+    );
+  };
+
+  //
+
   const handleJobAddSubmit = async (e, boardIndex) => {
     e.preventDefault();
     const { company, title, location } = e.target;
+
     await saveNewJob(currentUser.userId, {
       status: columnMap[boardIndex],
       company: company.value,
       jobTitle: title.value,
       location: location.value,
     });
-    setAppsToday(appsToday + 1);
-    console.log(company.value, title.value, location.value);
+
+    const query = `mutation {
+      incrementJobsApplied(userId: ${currentUser.userId}) {
+        success
+      }
+    }`;
+
+    await postToBackEnd(query);
+
+    await setAppsToday(appsToday + 1);
   };
 
   useEffect(() => {
     const setToken = () => {
       const token = localStorage.getItem('token');
-      console.log(jwt_decode(token));
       setUser(jwt_decode(token));
     };
     setToken();
@@ -175,10 +210,19 @@ export default function Home() {
       setBoardData(data);
     };
     getJobData();
+
+    // setAppsToday(currentUser.)
   }, [currentUser]);
 
+  useEffect(() => {
+    try {
+      setAppsToday(currentUser.dailyAppCount);
+    } catch (error) {
+      return;
+    }
+  }, [boardData]);
+
   const onDragEnd = async re => {
-    console.log(boardData);
     if (!re.destination) return;
     let newBoardData = boardData;
     var dragItem =
@@ -296,6 +340,7 @@ export default function Home() {
                                             data={item}
                                             index={iIndex}
                                             className="m-3"
+                                            deleteJob={deleteJob}
                                           />
                                         );
                                       } else if (search === '') {
@@ -305,6 +350,7 @@ export default function Home() {
                                             data={item}
                                             index={iIndex}
                                             className="m-3"
+                                            deleteJob={deleteJob}
                                           />
                                         );
                                       }

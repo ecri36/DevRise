@@ -7,9 +7,6 @@ import axios from 'axios';
 
 const Signup = () => {
   const router = useRouter();
-  const logTHis = code => {
-    console.log(code);
-  };
   useEffect(() => {
     const { code, state } = router.query;
     const handleOAuth = async () => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 
-function CardItem({ data, index, hidden }) {
+function CardItem({ data, index, deleteJob }) {
   return (
     <Draggable index={index} draggableId={data._id.toString()}>
       {provided => (
@@ -19,7 +19,7 @@ function CardItem({ data, index, hidden }) {
             <button className="bg-purple-500 hover:bg-purple-400 text-white font-bold py-1 px-3 border-b-4 border-purple-700 hover:border-purple-500 rounded">
               Edit
             </button>
-            <button className="bg-red-500 hover:bg-red-400 text-white font-bold py-1 px-3 border-b-4 border-red-700 hover:border-red-500 rounded">
+            <button onClick={(e) => deleteJob(e, data)} className="bg-red-500 hover:bg-red-400 text-white font-bold py-1 px-3 border-b-4 border-red-700 hover:border-red-500 rounded">
               X
             </button>
             
