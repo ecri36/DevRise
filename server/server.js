@@ -8,7 +8,7 @@ const http = require('http');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
-dotenv.config
+dotenv.config;
 // Importing the combined type and resolver definitions to import to Apollo Server
 const typeDefs = require('./graphql/models/Query');
 const resolvers = require('./graphql/models/Resolvers');
@@ -52,6 +52,9 @@ async function startApolloServer() {
 
   // Set up our Express middleware to handle CORS, body parsing,
   // and our expressMiddleware function.
+  app.get('/test', (req, res) => {
+    res.json('hi');
+  });
   app.use(
     '/graphql',
     cors(),
@@ -62,7 +65,6 @@ async function startApolloServer() {
       },
     })
   );
-
   // Modified server startup
   await new Promise(resolve => httpServer.listen({ port: 4000 }, resolve));
   // Display a log to notify that the GQL server is up and running

@@ -2,7 +2,7 @@ const axios = require('axios');
 const controller = require('./controller');
 const jwt = require('jsonwebtoken');
 
-async function getOAuthToken(code) {
+const getOAuthToken = async code => {
   try {
     const gitHubOAuthAccessTokenUrl =
       'https://github.com/login/oauth/access_token';
@@ -28,7 +28,7 @@ async function getOAuthToken(code) {
     console.log('Err is getOauthToken', error.message);
     return { gitHubToken: 'Invalid code' };
   }
-}
+};
 
 const getGitHubUserData = async oauthAccessToken => {
   try {

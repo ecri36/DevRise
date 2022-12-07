@@ -17,20 +17,18 @@ const Query = `
                 : JobResponse,
         
         updateJob(jobId: Int, jobField: String, value: String): JobResponse
-        
         deleteJob(jobId: Int): JobResponse,        
-        signin(signinType: String, email: String, password: String): AuthorizationResponse,
+        signin(signinType: String, code: String, email: String, password: String): AuthorizationResponse,
         register(registerType: String,
+            code: String, 
             name: String, 
             email: String,
             password: String )
                 : AuthorizationResponse
-
-        
     }
         
     type Jobs {
-        jobs: [JobEntry]
+        jobs: [JobsInBoard]
     }
 
     type User {
@@ -40,22 +38,27 @@ const Query = `
         dailyJobsApplied: Int
     }
     
+    type JobsInBoard {
+        name: String, 
+        items: [JobEntry]
+    }
+
     type JobEntry {
-        id: Int, 
-        ownerId: Int, 
-        jobTitle: String, 
+        _id: Int, 
+        owner_id: Int, 
+        job_title: String, 
         status: String, 
         company: String, 
         location: String, 
         hyperlink: String,
-        positionType: String,
-        applicationData: String
+        position_type: String,
+        application_data: String
     }
     
     type JobResponse {
         success: Boolean, 
         updateType: String,
-        jobId: Int
+        job: JobEntry
     }
     
     type AuthorizationResponse {

@@ -20,11 +20,40 @@ module.exports = {
       console.log(`Error message: ${error.message}`);
     }
   },
+  getJobs: async userId => {
+    try {
+      const query = `SELECT * FROM jobs WHERE owner_id = $1`;
+      const values = [userId];
+      const { rows } = await db.query(query, values);
+
+      const jobs = [
+        { name: 'Prospective', items: [] },
+        { name: 'App Submitted', items: [] },
+        { name: 'Interview Scheduled', items: [] },
+        { name: 'Rejected', items: [] },
+      ];
+
+      rows.forEach(e => {
+        jobs.forEach((j, i) => {
+          if (e.status === j.name) {
+            jobs[i].items.push(e);
+          }
+        });
+      });
+
+      return {
+        jobs,
+      };
+    } catch (error) {
+      console.log('an error occured in getJobs');
+      console.log(`Error message: ${error.message}`);
+    }
+  },
   createUser: async userData => {
     try {
       const { name, email, password, registerType } = userData;
       let values = [name, email, null];
-      
+
       if (registerType !== 'oauth') {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
@@ -82,7 +111,7 @@ module.exports = {
         return {
           success: true,
           updateType: 'create',
-          jobId: rows[0]._id,
+          job: rows[0],
         };
       } else {
         throw new Error('Error in creating job');
@@ -127,6 +156,7 @@ module.exports = {
   updateJob: async jobData => {
     try {
       const { jobId, jobField, value } = jobData;
+
       // TODO: Fix this to not ber a template literal
       const queryString = `
       UPDATE jobs\
@@ -140,7 +170,7 @@ module.exports = {
         return {
           success: true,
           updateType: 'update',
-          jobId,
+          job: rows[0],
         };
       } else {
         return {
