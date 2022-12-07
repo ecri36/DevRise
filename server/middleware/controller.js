@@ -8,13 +8,7 @@ module.exports = {
       const query = `SELECT * FROM users WHERE email = $1`;
       const values = [email];
       const { rows } = await db.query(query, values);
-      return {
-        id: rows[0]._id,
-        name: rows[0].name,
-        email: rows[0].email,
-        password: rows[0].password,
-        dailyJobsApplied: rows[0].daily_job_count,
-      };
+      return rows[0];
     } catch (error) {
       console.log('an error occured in getUser');
       console.log(`Error message: ${error.message}`);
@@ -52,7 +46,7 @@ module.exports = {
   createUser: async userData => {
     try {
       const { name, email, password, registerType } = userData;
-      let values = [name, email, null];
+      let values = [name, email, null, 0];
 
       if (registerType !== 'oauth') {
         const salt = await bcrypt.genSalt(10);
@@ -60,10 +54,11 @@ module.exports = {
         values[2] = hashedPassword;
       }
 
-      const query = `INSERT INTO users (name, email, password)\
-      VALUES ($1, $2, $3) RETURNING *;`;
+      const query = `INSERT INTO users (name, email, password, daily_job_count)\
+      VALUES ($1, $2, $3, $4) RETURNING *;`;
 
       const { rows } = await db.query(query, values);
+      return rows[0];
     } catch (error) {
       console.log('an error occured in createUSer');
       console.log(`Error message: ${error.message}`);

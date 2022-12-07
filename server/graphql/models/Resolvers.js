@@ -26,30 +26,26 @@ module.exports = {
       return controller.deleteJob(args.jobId);
     },
     signin: async (_, args) => {
-      const { signinType, email, code, password } = args;
-
-      let token;
+      const { signinType, code } = args;
+      const authResponse = {};
       if (signinType === 'oauth') {
-        const { token } = await handleOAuth(code);
-        token = token;
+        const { token } = await handleOAuth(code, 'login');
+        authResponse.success = true;
+        authResponse.token = token;
       }
 
       // Return dummyData for now
-      return {
-        success: true,
-        token,
-      };
+      return authResponse;
     },
     register: async (_, args) => {
-      const { registerType, UserData } = args;
-      if (signinType === 'oauth') {
-        await handleOAuth(code);
+      const { registerType, code } = args;
+      const authResponse = {};
+      if (registerType === 'oauth') {
+        const { token } = await handleOAuth(code, 'register');
+        authResponse.success = true;
+        authResponse.token = token;
       }
-      // Return dummy data for now
-      return {
-        success: true,
-        token: 'dummy token',
-      };
+      return authResponse;
     },
   },
 };
