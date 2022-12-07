@@ -111,7 +111,7 @@ module.exports = {
         return {
           success: true,
           updateType: 'create',
-          jobId: rows[0]._id,
+          job: rows[0],
         };
       } else {
         throw new Error('Error in creating job');
@@ -156,7 +156,7 @@ module.exports = {
   updateJob: async jobData => {
     try {
       const { jobId, jobField, value } = jobData;
-      
+
       // TODO: Fix this to not ber a template literal
       const queryString = `
       UPDATE jobs\
@@ -170,7 +170,7 @@ module.exports = {
         return {
           success: true,
           updateType: 'update',
-          jobId,
+          job: rows[0],
         };
       } else {
         return {

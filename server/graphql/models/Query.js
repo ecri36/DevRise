@@ -18,8 +18,9 @@ const Query = `
         
         updateJob(jobId: Int, jobField: String, value: String): JobResponse
         deleteJob(jobId: Int): JobResponse,        
-        signin(signinType: String, email: String, password: String): AuthorizationResponse,
+        signin(signinType: String, code: String, email: String, password: String): AuthorizationResponse,
         register(registerType: String,
+            code: String, 
             name: String, 
             email: String,
             password: String )
@@ -57,7 +58,7 @@ const Query = `
     type JobResponse {
         success: Boolean, 
         updateType: String,
-        jobId: Int
+        job: JobEntry
     }
     
     type AuthorizationResponse {
