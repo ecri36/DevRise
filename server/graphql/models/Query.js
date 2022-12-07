@@ -19,7 +19,7 @@ const Query = `
         updateJob(jobId: Int, jobField: String, value: String): JobResponse
         
         deleteJob(jobId: Int): JobResponse,        
-        
+        incrementJobsApplied(userId: Int): IncrementResponse
         signin(signinType: String, code: String, email: String, password: String): AuthorizationResponse,
         register(registerType: String,
             code: String, 
@@ -66,6 +66,10 @@ const Query = `
     type AuthorizationResponse {
         success: Boolean, 
         token: String
+    }
+
+    type IncrementResponse {
+        success: Boolean
     }
     
     `;

@@ -6,7 +6,6 @@ module.exports = {
   Query: {
     jobs: async (_, args) => {
       const { userId } = args;
-      console.log('ARe we here?');
 
       return getJobs(userId);
     },
@@ -24,6 +23,9 @@ module.exports = {
     },
     deleteJob: async (_, args) => {
       return controller.deleteJob(args.jobId);
+    },
+    incrementJobsApplied: (_, args) => {
+      return controller.incrementApplicationsSubmitted(args);
     },
     signin: async (_, args) => {
       const { signinType, code } = args;

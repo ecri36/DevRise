@@ -57,12 +57,13 @@ const getGitHubUserData = async oauthAccessToken => {
 };
 
 const generateJWT = userObject => {
-  const { name, email, userId } = userObject;
+  const { name, email, userId, dailyAppCount } = userObject;
   const token = jwt.sign(
     {
       userId,
       name,
       email,
+      dailyAppCount,
     },
     process.env.JWT_SECRET,
     {
@@ -88,11 +89,11 @@ const handleOAuth = async (code, loginOrRegister) => {
         email,
         registerType: 'oauth',
       });
-      console.log('user', user);
       return generateJWT({
         userId: user._id,
         name: user.name,
         email: user.email,
+        dailyAppCount: user.daily_job_count,
       });
     }
 
@@ -103,6 +104,7 @@ const handleOAuth = async (code, loginOrRegister) => {
         userId: user._id,
         name: user.name,
         email: user.email,
+        dailyAppCount: user.daily_job_count,
       });
     }
   } catch (error) {

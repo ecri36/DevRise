@@ -178,4 +178,19 @@ module.exports = {
       console.log(`Error message: ${error.message}`);
     }
   },
+  incrementApplicationsSubmitted: async userData => {
+    try {
+      const { userId } = userData;
+      const queryString = `
+      UPDATE users\
+      SET daily_job_count = daily_job_count + 1\
+      WHERE _id = $1 RETURNING *;`;
+
+      const values = [userId];
+      const { rows } = await db.query(queryString, values);
+      return {
+        success: true,
+      };
+    } catch (error) {}
+  },
 };
