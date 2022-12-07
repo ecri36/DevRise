@@ -1,10 +1,10 @@
-import React from "react";
-import { Draggable } from "react-beautiful-dnd";
+import React from 'react';
+import { Draggable } from 'react-beautiful-dnd';
 
 function CardItem({ data, index }) {
   return (
     <Draggable index={index} draggableId={data.id.toString()}>
-      {(provided) => (
+      {provided => (
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
@@ -15,9 +15,6 @@ function CardItem({ data, index }) {
         </div>
       )}
     </Draggable>
-
-
-
   );
 }
 
