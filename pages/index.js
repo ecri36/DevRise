@@ -21,6 +21,25 @@ function createGuidId() {
   });
 }
 
+const editJob = async (jobId, fieldName, value) => {
+  let data = await fetch('http://localhost:4000/graphql', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query: `query UpdateJob {
+            updateJob(jobId: ${jobId}, jobField: ${fieldName}, value: ${value}) {
+              success
+              updateType
+              jobId
+            }
+          }`,
+    }),
+  });
+  console.log('Job updated!');
+};
+
 export default function Home() {
   const [ready, setReady] = useState(false);
   const [boardData, setBoardData] = useState(null);
@@ -64,7 +83,7 @@ export default function Home() {
     getJobData();
   }, []);
 
-  const onDragEnd = re => {
+  const onDragEnd = async re => {
     if (!re.destination) return;
     let newBoardData = boardData;
     var dragItem =
@@ -78,6 +97,14 @@ export default function Home() {
       0,
       dragItem
     );
+    const columnMap = {
+      0: 'Prospective',
+      1: 'App Submitted',
+      2: 'Interview Scheduled',
+      3: 'Rejected',
+    };
+
+    await editJob(re.draggableId, 'status', columnMap[re.droppableId]);
     setBoardData(newBoardData);
   };
 
@@ -105,7 +132,6 @@ export default function Home() {
       }
     }
   };
-
   return (
     <Layout>
       <div className="p-10 flex flex-col h-screen">
@@ -140,59 +166,92 @@ export default function Home() {
                                 </span>
                               </h4>
 
-                            <div
-                              className="overflow-y-auto overflow-x-auto h-auto"
-                              style={{ maxHeight: 'calc(100vh - 290px)' }}
-                            >
-                              {board.items.length > 0 &&
-                                board.items.map((item, iIndex) => {
-                                  return (
-                                    <CardItem
-                                      key={item.id}
-                                      data={item}
-                                      index={iIndex}
-                                      className="m-3"
-                                    />
-                                  );
-                                })}
-                              {provided.placeholder}
-                            </div>
+                              <div
+                                className="overflow-y-auto overflow-x-auto h-auto"
+                                style={{ maxHeight: 'calc(100vh - 290px)' }}
+                              >
+                                {board.items.length > 0 &&
+                                  board.items.map((item, iIndex) => {
+                                    return (
+                                      <CardItem
+                                        key={item._id}
+                                        data={item}
+                                        index={iIndex}
+                                        className="m-3"
+                                      />
+                                    );
+                                  })}
+                                {provided.placeholder}
+                              </div>
 
-                            {showForm && selectedBoard === bIndex ? (
-                              <div className="p-3">
-                                <div class="pt-6 relative flex text-gray-800 antialiased flex-col justify-center overflow-auto bg-gray-50">
-                                  <div class="relative sm:w-72 mx-auto text-center">
-                                    <span class="text-xl font-bold ">Add a New Application</span>
-                                    <div class="bg-white shadow-md rounded-lg text-left">
-                                      <div class="h-2 bg-blue-400 rounded-t-md"></div>
-                                      <div class="px-8 py-6 ">
-                                        <label class="block font-semibold"> Company </label>
-                                        <input type="company" placeholder="Company Name" class="border w-full h-5 px-3 py-5 mt-2 hover:outline-none focus:outline-none focus:ring-indigo-500 focus:ring-1 rounded-md"></input>
-                                        <label class="block mt-3 font-semibold"> Title </label>
-                                        <input type="title" placeholder="Job Title" class="border w-full h-5 px-3 py-5 mt-2 hover:outline-none focus:outline-none focus:ring-indigo-500 focus:ring-1 rounded-md"></input>
-                                        <label class="block mt-3 font-semibold"> Location</label>
-                                        <input type="location" placeholder="Location" class="border w-full h-5 px-3 py-5 mt-2 hover:outline-none focus:outline-none focus:ring-indigo-500 focus:ring-1 rounded-md"></input>
+                              {showForm && selectedBoard === bIndex ? (
+                                <div className="p-3">
+                                  <div class="pt-6 relative flex text-gray-800 antialiased flex-col justify-center overflow-auto bg-gray-50">
+                                    <div class="relative sm:w-72 mx-auto text-center">
+                                      <span class="text-xl font-bold ">
+                                        Add a New Application
+                                      </span>
+                                      <div class="bg-white shadow-md rounded-lg text-left">
+                                        <div class="h-2 bg-blue-400 rounded-t-md"></div>
+                                        <div class="px-8 py-6 ">
+                                          <label class="block font-semibold">
+                                            {' '}
+                                            Company{' '}
+                                          </label>
+                                          <input
+                                            type="company"
+                                            placeholder="Company Name"
+                                            class="border w-full h-5 px-3 py-5 mt-2 hover:outline-none focus:outline-none focus:ring-indigo-500 focus:ring-1 rounded-md"
+                                          ></input>
+                                          <label class="block mt-3 font-semibold">
+                                            {' '}
+                                            Title{' '}
+                                          </label>
+                                          <input
+                                            type="title"
+                                            placeholder="Job Title"
+                                            class="border w-full h-5 px-3 py-5 mt-2 hover:outline-none focus:outline-none focus:ring-indigo-500 focus:ring-1 rounded-md"
+                                          ></input>
+                                          <label class="block mt-3 font-semibold">
+                                            {' '}
+                                            Location
+                                          </label>
+                                          <input
+                                            type="location"
+                                            placeholder="Location"
+                                            class="border w-full h-5 px-3 py-5 mt-2 hover:outline-none focus:outline-none focus:ring-indigo-500 focus:ring-1 rounded-md"
+                                          ></input>
                                           <div class="flex justify-between items-baseline">
-                                            <button type="submit" class="mt-4 bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-purple-600 ">Add</button>
-                                            <button onClick={() => setShowForm(false)} class="text-sm hover:underline">Close</button>
+                                            <button
+                                              type="submit"
+                                              class="mt-4 bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-purple-600 "
+                                            >
+                                              Add
+                                            </button>
+                                            <button
+                                              onClick={() => setShowForm(false)}
+                                              class="text-sm hover:underline"
+                                            >
+                                              Close
+                                            </button>
                                           </div>
+                                        </div>
                                       </div>
-                                      </div>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                              
-                            ) : (
-                              <button
-                                className="flex justify-center items-center my-3 space-x-2 text-lg"
-                                onClick={() => {
-                                  setSelectedBoard(bIndex);
-                                  setShowForm(true);
-                                }}
-                              >
-                                <PlusCircleIcon className="w-6 h-6 text-gray-500" />
-                              </button>
-                            )}
+                              ) : (
+                                <button
+                                  className="flex justify-center items-center my-3 space-x-2 text-lg"
+                                  onClick={() => {
+                                    setSelectedBoard(bIndex);
+                                    setShowForm(true);
+                                  }}
+                                >
+                                  <PlusCircleIcon className="w-6 h-6 text-gray-500" />
+                                </button>
+                              )}
+                            </div>
                           </div>
                         )}
                       </Droppable>

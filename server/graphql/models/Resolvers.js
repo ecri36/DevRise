@@ -20,6 +20,7 @@ module.exports = {
       return controller.createJob(args);
     },
     updateJob: async (_, args) => {
+      console.log('ARE WER UPDATING');
       return controller.updateJob(args);
     },
     deleteJob: async (_, args) => {

@@ -25,6 +25,7 @@ module.exports = {
       const query = `SELECT * FROM jobs WHERE owner_id = $1`;
       const values = [userId];
       const { rows } = await db.query(query, values);
+
       const jobs = [
         { name: 'Prospective', items: [] },
         { name: 'App Submitted', items: [] },
@@ -39,7 +40,7 @@ module.exports = {
           }
         });
       });
-      console.log(jobs);
+
       return {
         jobs,
       };
@@ -155,6 +156,7 @@ module.exports = {
   updateJob: async jobData => {
     try {
       const { jobId, jobField, value } = jobData;
+      
       // TODO: Fix this to not ber a template literal
       const queryString = `
       UPDATE jobs\
