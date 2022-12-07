@@ -127,7 +127,7 @@ export default function Home() {
                           >
                             <div
                               className={`bg-gray-100 rounded-md shadow-md
-                            flex flex-col relative overflow-hidden
+                            flex flex-col relative overflow-auto
                             ${snapshot.isDraggingOver && 'bg-green-100'}`}
                             >
                               <span
@@ -140,46 +140,59 @@ export default function Home() {
                                 </span>
                               </h4>
 
-                              <div
-                                className="overflow-y-auto overflow-x-hidden h-auto"
-                                style={{ maxHeight: 'calc(100vh - 290px)' }}
-                              >
-                                {board.items.length > 0 &&
-                                  board.items.map((item, iIndex) => {
-                                    return (
-                                      <CardItem
-                                        key={item.id}
-                                        data={item}
-                                        index={iIndex}
-                                        className="m-3"
-                                      />
-                                    );
-                                  })}
-                                {provided.placeholder}
-                              </div>
-
-                              {showForm && selectedBoard === bIndex ? (
-                                <div className="p-3">
-                                  <textarea
-                                    className="border-gray-300 rounded focus:ring-purple-400 w-full"
-                                    rows={3}
-                                    placeholder="Task info"
-                                    data-id={bIndex}
-                                    onKeyDown={e => onTextAreaKeyPress(e)}
-                                  />
-                                </div>
-                              ) : (
-                                <button
-                                  className="flex justify-center items-center my-3 space-x-2 text-lg"
-                                  onClick={() => {
-                                    setSelectedBoard(bIndex);
-                                    setShowForm(true);
-                                  }}
-                                >
-                                  <PlusCircleIcon className="w-6 h-6 text-gray-500" />
-                                </button>
-                              )}
+                            <div
+                              className="overflow-y-auto overflow-x-auto h-auto"
+                              style={{ maxHeight: 'calc(100vh - 290px)' }}
+                            >
+                              {board.items.length > 0 &&
+                                board.items.map((item, iIndex) => {
+                                  return (
+                                    <CardItem
+                                      key={item.id}
+                                      data={item}
+                                      index={iIndex}
+                                      className="m-3"
+                                    />
+                                  );
+                                })}
+                              {provided.placeholder}
                             </div>
+
+                            {showForm && selectedBoard === bIndex ? (
+                              <div className="p-3">
+                                <div class="pt-6 relative flex text-gray-800 antialiased flex-col justify-center overflow-auto bg-gray-50">
+                                  <div class="relative sm:w-72 mx-auto text-center">
+                                    <span class="text-xl font-bold ">Add a New Application</span>
+                                    <div class="bg-white shadow-md rounded-lg text-left">
+                                      <div class="h-2 bg-blue-400 rounded-t-md"></div>
+                                      <div class="px-8 py-6 ">
+                                        <label class="block font-semibold"> Company </label>
+                                        <input type="company" placeholder="Company Name" class="border w-full h-5 px-3 py-5 mt-2 hover:outline-none focus:outline-none focus:ring-indigo-500 focus:ring-1 rounded-md"></input>
+                                        <label class="block mt-3 font-semibold"> Title </label>
+                                        <input type="title" placeholder="Job Title" class="border w-full h-5 px-3 py-5 mt-2 hover:outline-none focus:outline-none focus:ring-indigo-500 focus:ring-1 rounded-md"></input>
+                                        <label class="block mt-3 font-semibold"> Location</label>
+                                        <input type="location" placeholder="Location" class="border w-full h-5 px-3 py-5 mt-2 hover:outline-none focus:outline-none focus:ring-indigo-500 focus:ring-1 rounded-md"></input>
+                                          <div class="flex justify-between items-baseline">
+                                            <button type="submit" class="mt-4 bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-purple-600 ">Add</button>
+                                            <button onClick={() => setShowForm(false)} class="text-sm hover:underline">Close</button>
+                                          </div>
+                                      </div>
+                                      </div>
+                                  </div>
+                                </div>
+                              </div>
+                              
+                            ) : (
+                              <button
+                                className="flex justify-center items-center my-3 space-x-2 text-lg"
+                                onClick={() => {
+                                  setSelectedBoard(bIndex);
+                                  setShowForm(true);
+                                }}
+                              >
+                                <PlusCircleIcon className="w-6 h-6 text-gray-500" />
+                              </button>
+                            )}
                           </div>
                         )}
                       </Droppable>
