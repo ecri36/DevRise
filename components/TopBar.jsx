@@ -19,7 +19,9 @@ function TopBar(props) {
         </div>
 
         <div className="flex items-center text-white">
-          <h3 className="font-bold mr-3">Log Out</h3>
+          <button class="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 border-b-4 border-red-600 hover:border-red-500 rounded">
+            Log Out
+          </button>
         </div>
       </div>
     </div>
