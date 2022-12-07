@@ -15,37 +15,60 @@ const Signup = () => {
       if (code) {
         let query = '';
         // login state code
-        if (state === 'c2lnbmlu') {
+        if (state === 'login') {
           query = `mutation {
-            signin(signinType: "oauth", code: "${code}") {
+            signin(
+              signinType: "oauth",
+              code: "${code}") {
                 success,
                 token
             }
           }`;
+          const { data } = await axios.post(
+            'http://localhost:4000/graphql',
+            {
+              query: query,
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+          console.log(data);
+          const { signin } = data.data;
+          if (signin.success) {
+            localStorage.setItem('token', signin.token);
+            router.push('/app');
+          }
         }
         // register state code
-        if (state === 'cmVnaXN0ZXI') {
-          query = `mutation register (
-            registerType: "oauth",
-            code: "${code}") {
-              success,
-              token
+        if (state === 'register') {
+          query = `mutation {
+            register(
+              registerType: "oauth",
+              code: "${code}") {
+                success,
+                token
+              }
           }`;
-        }
-        console.log(query);
-        const { data } = await axios.post(
-          'http://localhost:4000/graphql',
-          {
-            query: query,
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
+          const { data } = await axios.post(
+            'http://localhost:4000/graphql',
+            {
+              query: query,
             },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+          const { register } = data.data;
+          if (register.success) {
+            localStorage.setItem('token', register.token);
+            router.push('/app');
           }
-        );
-        console.log(data);
-        router.push('/app');
+        }
       }
     };
     handleOAuth();
@@ -67,7 +90,8 @@ const Signup = () => {
                 pathname: 'https://github.com/login/oauth/authorize',
                 query: {
                   client_id: '6d90f6ec2d021298591c',
-                  state: 'cmVnaXN0ZXI',
+                  state: 'login',
+                  user: 'email',
                 },
               }}
             >
@@ -83,7 +107,8 @@ const Signup = () => {
               pathname: 'https://github.com/login/oauth/authorize',
               query: {
                 client_id: '6d90f6ec2d021298591c',
-                state: 'c2lnbmlu',
+                state: 'register',
+                user: 'email',
               },
             }}
           >
