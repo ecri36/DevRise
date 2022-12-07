@@ -5,8 +5,8 @@ import Link from 'next/link'
 
 function TopBar(props) {
   return (
-    <div style={{zIndex: 1}} className="z-1 h-16 pl-40 fixed bg-gradient-to-r from-purple-400
-        to-blue-500 w-full flex items-center pr-5 justify-end">
+    <div style={{zIndex: 1}} className="z-1 h-16 pl-40 fixed bg-gradient-to-r from-purple-700
+        to-red-300 w-full flex items-center pr-5 justify-end">
       {/* <div className="flex px-5 items-center">
         <SearchIcon className="w-5 h-5 text-white" />
         <input type="text" placeholder="Search for company"
