@@ -21,7 +21,7 @@ function createGuidId() {
   });
 }
 
-const postToBackEnd = async query => {
+const postToBackEnd = async (query) => {
   return await axios.post(
     'http://localhost:4000/graphql',
     {
@@ -35,11 +35,26 @@ const postToBackEnd = async query => {
   );
 };
 
+// const deleteFromBackEnd = async query => {
+//   return await axios.delete(
+//     'http://localhost:4000/graphql/',
+//     {
+//       query: query,
+//     },
+//     {
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//     }
+//   );
+// };
+
 export default function Home() {
   const [ready, setReady] = useState(false);
   const [boardData, setBoardData] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [selectedBoard, setSelectedBoard] = useState(0);
+  console.log('-----BOARDSTATE-----', boardData);
   // The init value is hard coded for testing
   const [currentUser, setUser] = useState({ userId: 1 });
   const [columnMap, setColumns] = useState({
@@ -94,20 +109,51 @@ export default function Home() {
       await postToBackEnd(queryString)
     ).data.data.createJob;
     // get the current items array that needs to be changed
-    const { items } = boardData.find(column => column.name === status);
+    const { items } = boardData.find((column) => column.name === status);
     // set a new items array so we are not affecting state directly
     const newItems = [...items, job];
     // set new state
-    setBoardData(oldState =>
-      oldState.map(column =>
+    setBoardData((oldState) =>
+      oldState.map((column) =>
         column.name === status ? { ...column, items: newItems } : column
       )
     );
   };
 
+  // delete request:
+
+  const deleteJob = async (_, jobData) => {
+    console.log();
+    // do we do anything with state here before proceeding?
+    const { _id, status } = jobData;
+    const queryString = `mutation {
+    deleteJob(
+      jobId: ${_id}
+    ) {
+      success
+    }
+  }`;
+
+    // Deconstruct the job from the response
+    const data = await postToBackEnd(queryString);
+
+    const { items } = boardData.find((column) => column.name === status);
+    // set a new items array so we are not affecting state directly
+    const newItems = items.filter((job) => job._id !== _id);
+    // set new state
+    setBoardData((oldState) =>
+      oldState.map((column) =>
+        column.name === status ? { ...column, items: newItems } : column
+      )
+    );
+  };
+
+  //
+
   const handleJobAddSubmit = async (e, boardIndex) => {
     e.preventDefault();
     const { company, title, location } = e.target;
+
     await saveNewJob(currentUser.userId, {
       status: columnMap[boardIndex],
       company: company.value,
@@ -154,7 +200,7 @@ export default function Home() {
     getJobData();
   }, []);
 
-  const onDragEnd = async re => {
+  const onDragEnd = async (re) => {
     if (!re.destination) return;
     let newBoardData = boardData;
     var dragItem =
@@ -176,7 +222,7 @@ export default function Home() {
     setBoardData(newBoardData);
   };
 
-  const onTextAreaKeyPress = e => {
+  const onTextAreaKeyPress = (e) => {
     if (e.keyCode === 13) {
       //Enter
       const val = e.target.value;
@@ -246,6 +292,7 @@ export default function Home() {
                                         data={item}
                                         index={iIndex}
                                         className="m-3"
+                                        deleteJob={deleteJob}
                                       />
                                     );
                                   })}
@@ -263,7 +310,7 @@ export default function Home() {
                                         <div class="h-2 bg-blue-400 rounded-t-md"></div>
                                         <div class="px-8 py-6 ">
                                           <form
-                                            onSubmit={e =>
+                                            onSubmit={(e) =>
                                               handleJobAddSubmit(e, bIndex)
                                             }
                                           >

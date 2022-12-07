@@ -132,12 +132,11 @@ module.exports = {
       const queryString = 'DELETE FROM jobs WHERE _id = $1 RETURNING *;';
       const values = [jobId];
       const { rows } = await db.query(queryString, values);
-
       if (rows[0]) {
         return {
           success: true,
           updateType: 'delete',
-          jobId,
+          job: rows[0],
         };
       } else {
         throw new Error('Error in deleting job');

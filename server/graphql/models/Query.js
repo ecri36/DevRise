@@ -17,7 +17,9 @@ const Query = `
                 : JobResponse,
         
         updateJob(jobId: Int, jobField: String, value: String): JobResponse
+        
         deleteJob(jobId: Int): JobResponse,        
+        
         signin(signinType: String, code: String, email: String, password: String): AuthorizationResponse,
         register(registerType: String,
             code: String, 
