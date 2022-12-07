@@ -2,6 +2,8 @@
 import Layout from '../components/Layout';
 import axios from 'axios';
 import Image from 'next/dist/client/image';
+import { SearchIcon } from '@heroicons/react/outline';
+
 import {
   ChevronDownIcon,
   PlusIcon,
@@ -12,6 +14,7 @@ import CardItem from '../components/CardItem';
 import BoardData from '../data/board-data.json';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { useEffect, useState } from 'react';
+
 
 function createGuidId() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -40,6 +43,10 @@ export default function Home() {
   const [boardData, setBoardData] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [selectedBoard, setSelectedBoard] = useState(0);
+  const [search, setSearch] = useState('');
+
+  const [appsToday, setAppsToday] = useState(0);
+
   // The init value is hard coded for testing
   const [currentUser, setUser] = useState({ userId: 1 });
   const [columnMap, setColumns] = useState({
@@ -114,7 +121,7 @@ export default function Home() {
       jobTitle: title.value,
       location: location.value,
     });
-
+    setAppsToday(appsToday + 1)
     console.log(company.value, title.value, location.value);
   };
   useEffect(() => {
@@ -154,7 +161,45 @@ export default function Home() {
     getJobData();
   }, []);
 
+  useEffect(() => {
+    if (process.browser) {
+      setReady(true);
+    }
+    const getJobData = async () => {
+      let data = await fetch('http://localhost:4000/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `query GetJobs {
+            jobs(userId: 1) {
+              jobs {
+                name
+                items {
+                  _id
+                  owner_id
+                  job_title
+                  status
+                  company
+                  location
+                  hyperlink
+                  position_type
+                  application_data
+                }
+              }
+            }
+          }`,
+        }),
+      });
+      data = await data.json();
+      setBoardData(data.data.jobs.jobs);
+    };
+    getJobData();
+  }, []);
+
   const onDragEnd = async re => {
+    console.log(boardData);
     if (!re.destination) return;
     let newBoardData = boardData;
     var dragItem =
@@ -202,6 +247,17 @@ export default function Home() {
   };
   return (
     <Layout>
+      
+        <div className='searchBar bg-red-200 h-12 rounded-lg m-4'>
+          <div className="flex px-5 items-center">
+            <SearchIcon className="w-5 h-8 text-white" />
+            <input onChange={(e) => setSearch(e.target.value)} type="text" placeholder="Search for company..."
+              className=" bg-transparent border-0 text-white-200 placeholder-white-200
+                    outline-none focus:ring-0 text-lg "/>
+            
+          </div>
+        </div>
+        
       <div className="p-10 flex flex-col h-screen">
         {/* Board header */}
 
@@ -240,28 +296,40 @@ export default function Home() {
                               >
                                 {board.items.length > 0 &&
                                   board.items.map((item, iIndex) => {
-                                    return (
-                                      <CardItem
-                                        key={item._id}
-                                        data={item}
-                                        index={iIndex}
-                                        className="m-3"
-                                      />
-                                    );
+                                    if (search != '' && (item.company.toLowerCase().startsWith(search) || item.company.toUpperCase().startsWith(search) || item.company.startsWith(search))){
+                                      return (
+                                        <CardItem
+                                          key={item._id}
+                                          data={item}
+                                          index={iIndex}
+                                          className="m-3"
+                                        />
+                                      );
+                                    } else if (search === ''){
+                                      return (
+                                        <CardItem
+                                          key={item._id}
+                                          data={item}
+                                          index={iIndex}
+                                          className="m-3"
+                                        />
+                                      );
+                                    }
+                                    
                                   })}
                                 {provided.placeholder}
                               </div>
 
                               {showForm && selectedBoard === bIndex ? (
                                 <div className="p-3">
-                                  <div class="pt-6 relative flex text-gray-800 antialiased flex-col justify-center overflow-auto bg-gray-50">
-                                    <div class="relative sm:w-72 mx-auto text-center">
-                                      <span class="text-xl font-bold ">
+                                  <div className="pt-6 relative flex text-gray-800 antialiased flex-col justify-center overflow-auto bg-gray-50">
+                                    <div className="relative sm:w-72 mx-auto text-center">
+                                      <span className="text-xl font-bold ">
                                         Add a New Application
                                       </span>
-                                      <div class="bg-white shadow-md rounded-lg text-left">
-                                        <div class="h-2 bg-blue-400 rounded-t-md"></div>
-                                        <div class="px-8 py-6 ">
+                                      <div className="bg-white shadow-md rounded-lg text-left">
+                                        <div className="h-2 bg-blue-400 rounded-t-md"></div>
+                                        <div className="px-8 py-6 ">
                                           <form
                                             onSubmit={e =>
                                               handleJobAddSubmit(e, bIndex)
@@ -274,16 +342,16 @@ export default function Home() {
                                             <input
                                               name="company"
                                               placeholder="Company Name"
-                                              class="border w-full h-5 px-3 py-5 mt-2 hover:outline-none focus:outline-none focus:ring-indigo-500 focus:ring-1 rounded-md"
+                                              className="border w-full h-5 px-3 py-5 mt-2 hover:outline-none focus:outline-none focus:ring-indigo-500 focus:ring-1 rounded-md"
                                             ></input>
-                                            <label class="block mt-3 font-semibold">
+                                            <label className="block mt-3 font-semibold">
                                               {' '}
                                               Title{' '}
                                             </label>
                                             <input
                                               name="title"
                                               placeholder="Job Title"
-                                              class="border w-full h-5 px-3 py-5 mt-2 hover:outline-none focus:outline-none focus:ring-indigo-500 focus:ring-1 rounded-md"
+                                              className="border w-full h-5 px-3 py-5 mt-2 hover:outline-none focus:outline-none focus:ring-indigo-500 focus:ring-1 rounded-md"
                                             ></input>
                                             <label class="block mt-3 font-semibold">
                                               {' '}
@@ -292,12 +360,12 @@ export default function Home() {
                                             <input
                                               name="location"
                                               placeholder="Location"
-                                              class="border w-full h-5 px-3 py-5 mt-2 hover:outline-none focus:outline-none focus:ring-indigo-500 focus:ring-1 rounded-md"
+                                              className="border w-full h-5 px-3 py-5 mt-2 hover:outline-none focus:outline-none focus:ring-indigo-500 focus:ring-1 rounded-md"
                                             ></input>
-                                            <div class="flex justify-between items-baseline">
+                                            <div className="flex justify-between items-baseline">
                                               <button
                                                 type="submit"
-                                                class="mt-4 bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-purple-600 "
+                                                className="mt-4 bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-purple-600 "
                                               >
                                                 Add
                                               </button>
@@ -305,7 +373,7 @@ export default function Home() {
                                                 onClick={() =>
                                                   setShowForm(false)
                                                 }
-                                                class="text-sm hover:underline"
+                                                className="text-sm hover:underline"
                                               >
                                                 Close
                                               </button>
@@ -338,6 +406,26 @@ export default function Home() {
           </DragDropContext>
         )}
       </div>
+
+      <div style={{zIndex : 1}}className="p-4 sticky bottom-0">
+        <div className="flex mb-2 items-center justify-between px-12">
+          <div>
+            <span className="text-xl font-semibold inline-block py-1 px-2 uppercase rounded-full text-purple-600 bg-purple-200">
+              Daily Application Goal: {appsToday} / 5
+            </span>
+          </div>
+          <div className="text-right">
+            <span className="text-4xl font-semibold inline-block text-purple-600">
+                {(appsToday / 5) * 100}%
+            </span>
+          </div>
+          </div>
+          <div className="overflow-hidden h-8 mb-4 text-xs flex rounded bg-purple-200">
+            <div style={{ width: `${(appsToday / 5) * 100}%` }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-purple-500">         
+          </div>
+        </div>
+      </div>
+      
     </Layout>
   );
 }

@@ -1,38 +1,9 @@
-<<<<<<< HEAD
-import Layout from '../components/Layout';
-import Image from 'next/dist/client/image';
-import {
-  ChevronDownIcon,
-  PlusIcon,
-  DotsVerticalIcon,
-  PlusCircleIcon,
-} from '@heroicons/react/outline';
-import CardItem from '../components/CardItem';
-import BoardData from '../data/board-data.json';
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-
-function createGuidId() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    var r = (Math.random() * 16) | 0,
-      v = c == 'x' ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
-}
-
-export default function Home() {
-  const [ready, setReady] = useState(false);
-  const [boardData, setBoardData] = useState(BoardData);
-  const [showForm, setShowForm] = useState(false);
-  const [selectedBoard, setSelectedBoard] = useState(0);
-=======
 'use client';
+
 import Link from 'next/link';
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
->>>>>>> dev
 
 const Signup = () => {
   const router = useRouter();
