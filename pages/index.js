@@ -10,6 +10,7 @@ import CardItem from '../components/CardItem';
 import BoardData from '../data/board-data.json';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 function createGuidId() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {

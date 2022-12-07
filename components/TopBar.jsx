@@ -1,6 +1,7 @@
 import React from 'react';
 import { SearchIcon, AtSymbolIcon, BellIcon } from '@heroicons/react/outline';
 import Image from 'next/image';
+import Link from 'next/link'
 
 function TopBar(props) {
   return (
@@ -19,9 +20,12 @@ function TopBar(props) {
         </div>
 
         <div className="flex items-center text-white">
-          <button class="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 border-b-4 border-red-600 hover:border-red-500 rounded">
-            Log Out
-          </button>
+          <Link href="/login">
+            <button class="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 border-b-4 border-red-600 hover:border-red-500 rounded">
+              Log Out
+            </button>
+          </Link>
+          
         </div>
       </div>
     </div>
