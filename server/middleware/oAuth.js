@@ -38,13 +38,18 @@ const getGitHubUserData = async oauthAccessToken => {
         Accept: 'application/json',
       },
     });
-
     if (!data.email) {
-      const userEmails = await axios.get('https://api.github.com/user/emails');
-      const userPrimaryEmailObject = userEmails.filter(e => e.primary === true);
-      data.email = userPrimaryEmailObject.email;
+      const userEmails = await axios.get('https://api.github.com/user/emails', {
+        headers: {
+          Authorization: `Bearer ${oauthAccessToken}`,
+          Accept: 'application/json',
+        },
+      });
+      const userPrimaryEmailObject = userEmails.data.filter(
+        e => e.primary === true
+      );
+      data.email = userPrimaryEmailObject[0].email;
     }
-
     return { gitHubUserData: data };
   } catch (error) {
     console.log(error.message);
@@ -64,7 +69,6 @@ const generateJWT = userObject => {
       expiresIn: 3_600_000,
     }
   );
-
   return {
     token,
   };
@@ -76,26 +80,37 @@ const handleOAuth = async (code, loginOrRegister) => {
     if (!gitHubToken) throw new Error('Invalid credentials');
     const { gitHubUserData } = await getGitHubUserData(gitHubToken);
 
+    // console.log(gitHubUserData);
     if (loginOrRegister === 'register') {
       const { name, email } = gitHubUserData;
-      const user = controller.createUser({
+      const user = await controller.createUser({
         name,
         email,
         registerType: 'oauth',
       });
-      return generateJWT(user);
+      console.log('user', user);
+      return generateJWT({
+        userId: user._id,
+        name: user.name,
+        email: user.email,
+      });
     }
 
     if (loginOrRegister === 'login') {
-      const user = controller.getUser(gitHubUserData.email);
-      return generateJWT(user);
+      const user = await controller.getUser(gitHubUserData.email);
+      console.log(user);
+      return generateJWT({
+        userId: user._id,
+        name: user.name,
+        email: user.email,
+      });
     }
   } catch (error) {
     console.log('Error in handleOauth', error.message);
   }
 };
 
-module.exports = handleOAuth;
+module.exports = { handleOAuth };
 
 // ########################################################################################################
 // const handleQuiLOAuth = async (code, type) {
