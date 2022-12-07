@@ -6,7 +6,7 @@ import {
 
 function SideBar(props) {
   return (
-    <div className="fixed inset-y-0 left-0 bg-white w-40">
+    <div style={{zIndex: 1}} className="fixed inset-y-0 left-0 bg-white w-40 z-1">
       <h1 className="flex items-center justify-center text-2xl
             h-16 bg-purple-600 text-white font-bold">DevRise</h1>
 
